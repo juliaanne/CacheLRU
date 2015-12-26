@@ -26,17 +26,17 @@ typedef struct {
     double sizeToRehash; // initialSize * loadFactor
 } HASHMAP;
 
-HASHMAP initHashMap(int initialSize, double loadFactor){
-    HASHMAP hashMap;
+void *initHashMap(HASHMAP *hashMap, int initialSize, double loadFactor){
     double sizeToRehash = initialSize * loadFactor;
-    int currentSize = 0;
-    LINKEDLIST buckets;
+    LINKEDLIST *buckets;
 
-    hashMap.buckets=buckets;
-    hashMap.currentSize=currentSize;
-    hashMap.initialSize=initialSize;
-    hashMap.loadFactor=loadFactor;
-    hashMap.sizeToRehash=sizeToRehash;
+    buckets = malloc(sizeof(LINKEDLIST)*initialSize);
+
+    hashMap->buckets= *(LINKEDLIST *) buckets;
+    hashMap->currentSize=0;
+    hashMap->initialSize=initialSize;
+    hashMap->loadFactor=loadFactor;
+    hashMap->sizeToRehash=sizeToRehash;
 
     return hashMap;
 }
@@ -47,7 +47,7 @@ HASHMAP initHashMap(int initialSize, double loadFactor){
 int main(int argc, char *argv[]) {
     int initialSize;
     double loadFactor;
-    HASHMAP hashMap;
+    HASHMAP *hashMap;
 
     if(argc<3){
         printf("Usage: %s <initialSize> <loadFactor> \n", argv[0]);
@@ -58,13 +58,15 @@ int main(int argc, char *argv[]) {
     initialSize = atoi(argv[1]);
     loadFactor = atof(argv[2]);
 
-    hashMap = initHashMap(initialSize, loadFactor);
+    hashMap = malloc(sizeof(HASHMAP));
+    initHashMap(hashMap, initialSize, loadFactor);
 
     printf("hashMap.currentSize: %d\nhashMap.initialSize: %d\nhashMap.loadFactor: %f\nhashMap.sizeToRehash: %f\n",
-           hashMap.currentSize, hashMap.initialSize, hashMap.loadFactor, hashMap.sizeToRehash
+           hashMap->currentSize, hashMap->initialSize, hashMap->loadFactor, hashMap->sizeToRehash
     );
 
     printf("-- HashMap Inicializado\n");
 
+    free(hashMap);
     return 0;
 }
