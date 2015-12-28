@@ -31,7 +31,7 @@ typedef struct _HM{
 
 void *initHashMap(HASHMAP *hashMap){
     hashMap->bucketsCount=initialSize;
-    hashMap->elementsCount=1;
+    hashMap->elementsCount=0;
     hashMap->currentLoadFactor=hashMap->elementsCount/hashMap->bucketsCount;
 
     return hashMap;
