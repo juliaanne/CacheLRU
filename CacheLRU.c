@@ -68,15 +68,41 @@ int contains(HASHMAP *hashMap, long long int key){
 
 
 int put(HASHMAP *hashMap, long long int key, PERSON person){
-
+    ENTRY *entry = malloc(sizeof(ENTRY));
     int code = hashCode(key);
 
-    ENTRY *entry = malloc(sizeof(ENTRY));
+    if(contains(hashMap, key)){
+        printf("Contido em HashMap->buckets[%d]\n", code);
+        return 0;
+    }
+
+    if(((hashMap->elementsCount+1)/hashMap->bucketsCount) > loadFactor ){
+        // NÃO TEM MAIS ESPAÇO, PRECISO REMOVER ANTES DE INSERIR
+        hashMap->buckets[code].last=hashMap->buckets[code].last->prev;
+        hashMap->buckets[code].last->next->prev=NULL;
+        free(hashMap->buckets[code].last->next);
+        hashMap->buckets[code].last->next=NULL;
+    }
+
+    // INSERINDO
     entry->key=key;
-    entry->next=NULL;
     entry->person=person;
-    hashMap->buckets[code].first=entry;
-    hashMap->buckets[code].last=NULL;
+    entry->prev=NULL;
+    if(hashMap->buckets[code].first == NULL){
+        // Bucket VAZIO
+        entry->next=NULL;
+        hashMap->buckets[code].first=entry;
+        hashMap->buckets[code].last=entry;
+    } else {
+        // Bucket com uma ou mais entries
+        entry->next=hashMap->buckets[code].first;
+        hashMap->buckets[code].first->prev=entry;
+        hashMap->buckets[code].first=entry;
+    }
+
+    // Atualizando valores
+    hashMap->elementsCount+=1;
+    hashMap->currentLoadFactor=hashMap->elementsCount/hashMap->bucketsCount;
 
     return 1;
 }
@@ -131,4 +157,3 @@ int main(int argc, char *argv[]) {
     free(hashMap);
     return 0;
 }
-
