@@ -1,13 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define loadFactor 0.75
+
 typedef struct {
     char nome[40];
-    int CPF;
+    long int CPF;
 } PERSON;
 
 typedef struct {
-    int key;
+    char key[40];
     int *next;
     PERSON person;
 } ENTRY;
@@ -20,50 +22,50 @@ typedef struct {
 
 typedef struct {
     LINKEDLIST buckets;
-    int currentSize;
-    int initialSize;
-    double loadFactor;
-    double sizeToRehash; // initialSize * loadFactor
+    int bucketsCount;
+    int elementsCount;
+    double currentLoadFactor;
 } HASHMAP;
 
-void *initHashMap(HASHMAP *hashMap, int initialSize, double loadFactor){
-    double sizeToRehash = initialSize * loadFactor;
+void initHashMap(HASHMAP *hashMap){
     LINKEDLIST *buckets;
 
-    buckets = malloc(sizeof(LINKEDLIST)*initialSize);
+    buckets = malloc(sizeof(LINKEDLIST));
 
     hashMap->buckets= *(LINKEDLIST *) buckets;
-    hashMap->currentSize=0;
-    hashMap->initialSize=initialSize;
-    hashMap->loadFactor=loadFactor;
-    hashMap->sizeToRehash=sizeToRehash;
+    hashMap->bucketsCount=1;
+    hashMap->elementsCount=0;
+    hashMap->currentLoadFactor=hashMap->elementsCount/hashMap->bucketsCount;
 
-    return hashMap;
+    free(buckets);
 }
 
-//ToDo: Put deverá implementar o rehash
+
+/*void *put(HASHMAP *hashMap, char key[40], long int value){
+    //ToDo: Test if Contains(); Se sim, retorna; Se não, insere.
+
+    //ToDo: Colocar na primeira posição,
+    PERSON person;
+    ENTRY entry;
+    hashMap->buckets.entry
+
+    person.nome = key[40];
+    person.CPF = value;
+
+    //ToDo: Inseriu! Ultrapassou valor de rehash? Rehash; Retorna;
+    return hashMap;
+}*/
 
 
 int main(int argc, char *argv[]) {
-    int initialSize;
-    double loadFactor;
     HASHMAP *hashMap;
 
-    if(argc<3){
-        printf("Usage: %s <initialSize> <loadFactor> \n", argv[0]);
-        printf("InitialSize - default: 16 \nloadFactor - default: 0.75\n");
-        exit(EXIT_FAILURE);
-    }
-
-    initialSize = atoi(argv[1]);
-    loadFactor = atof(argv[2]);
-
     hashMap = malloc(sizeof(HASHMAP));
-    initHashMap(hashMap, initialSize, loadFactor);
+    initHashMap(hashMap);
 
-    printf("hashMap.currentSize: %d\nhashMap.initialSize: %d\nhashMap.loadFactor: %f\nhashMap.sizeToRehash: %f\n",
-           hashMap->currentSize, hashMap->initialSize, hashMap->loadFactor, hashMap->sizeToRehash
-    );
+    printf("hashMap.bucketsCount: %d\n", hashMap->bucketsCount);
+    printf("hashMap.elementsCount: %d\n", hashMap->elementsCount);
+    printf("hashMap.loadFactor: %f\n", hashMap->currentLoadFactor);
 
     printf("-- HashMap Inicializado\n");
 
