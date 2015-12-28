@@ -52,6 +52,11 @@ int contains(HASHMAP *hashMap, long long int key){
 
     while(1){
         if(current->key==key){
+            // Se contém, devo atualizar para mais recente
+            hashMap->buckets[code].first->prev=current;
+            current->next=hashMap->buckets[code].first;
+            current->prev=NULL;
+            hashMap->buckets[code].first=current;
             return 1;
         }
         if(current->next==NULL) break;
@@ -61,7 +66,9 @@ int contains(HASHMAP *hashMap, long long int key){
     return 0;
 }
 
+
 int put(HASHMAP *hashMap, long long int key, PERSON person){
+
     int code = hashCode(key);
 
     ENTRY *entry = malloc(sizeof(ENTRY));
@@ -74,28 +81,54 @@ int put(HASHMAP *hashMap, long long int key, PERSON person){
     return 1;
 }
 
+void populando(HASHMAP *hashMap){
+    long long int key1 = 20677346522; // 10
+    long long int key2 = 88272078481; // 1
+    long long int key3 = 53604310598; // 6
+    long long int key4 = 85779623341; // 13
+    long long int key5 = 19245264173; // 13
+
+    PERSON person1;
+    strcpy(person1.nome, "Julia Anne");
+    person1.idade=22;
+    put(hashMap, key1, person1)? printf("-- Person %s Inserido --\n", person1.nome): printf("-- ERRO DE INSERÇÃO --\n");
+
+    PERSON person2;
+    strcpy(person2.nome, "Eliza Alves");
+    person2.idade=15;
+    put(hashMap, key2, person2)? printf("-- Person %s Inserido --\n", person2.nome): printf("-- ERRO DE INSERÇÃO --\n");
+
+    PERSON person3;
+    strcpy(person3.nome, "Ed de Souza");
+    person3.idade=55;
+    put(hashMap, key3, person3)? printf("-- Person %s Inserido --\n", person3.nome): printf("-- ERRO DE INSERÇÃO --\n");
+
+    PERSON person4;
+    strcpy(person4.nome, "Afonso Carvalho");
+    person4.idade=22;
+    put(hashMap, key4, person4)? printf("-- Person %s Inserido --\n", person4.nome): printf("-- ERRO DE INSERÇÃO --\n");
+
+    PERSON person5;
+    strcpy(person5.nome, "Carina Camacchi");
+    person5.idade=27;
+    put(hashMap, key5, person5)? printf("-- Person %s Inserido --\n", person5.nome): printf("-- ERRO DE INSERÇÃO --\n");
+
+}
+
+
 int main(int argc, char *argv[]) {
     HASHMAP *hashMap = malloc(sizeof(HASHMAP));
     initHashMap(hashMap);
     printf("-- HashMap Inicializado --\n");
 
-    long long int key = 20677346522;
-    PERSON person;
-    strcpy(person.nome, "Julia Anne");
-    person.idade=22;
-    if(put(hashMap, key, person)){
-        printf("-- Person %s Inserido --\n", person.nome);
-    } else printf("-- ERRO DE INSERÇÃO --\n");
+    populando(hashMap);
+    printf("-- HashMap Populado --\n");
 
-    printf("%d\n", contains(hashMap,key));
-
-    /*
-    printf("%d\n",hashCode(20677346522));   10
-    printf("%d\n",hashCode(88272078481));   1
-    printf("%d\n",hashCode(53604310598));   6
-    printf("%d\n",hashCode(85779623341));   13
-    printf("%d\n",hashCode(19245264173));   13*/
+    printf("Antes de consultar\n%lld\n", hashMap->buckets[13].first->key);
+    printf("%d\n", contains(hashMap,85779623341));
+    printf("Após consultar\n%lld\n", hashMap->buckets[13].first->key);
 
     free(hashMap);
     return 0;
 }
+
