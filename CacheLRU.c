@@ -187,10 +187,10 @@ void populando(HASHMAP *hashMap){
 int main(int argc, char *argv[]) {
     HASHMAP *hashMap = malloc(sizeof(HASHMAP));
     initHashMap(hashMap);
-    //printf("-- HashMap Inicializado com LOADFACTOR = %f --\n", hashMap->currentLoadFactor);
+    //printf("-- HashMap Inicializado com LOADFACTOR = %f\n", hashMap->currentLoadFactor);
 
     populando(hashMap);
-    //printf("-- HashMap Populado --\n");
+    //printf("-- HashMap Populado\n");
 
     free(hashMap);
     return 0;
