@@ -75,7 +75,7 @@ int put(HASHMAP *hashMap, long long int key, PERSON person){
     int code = hashCode(key);
 
     if(contains(hashMap, key)){
-        printf("\n(!!!) Contido em HashMap->buckets[%d]\n\n", code);
+        printf("Contido em HashMap->buckets[%d]\n", code);
         return 0;
     }
 
@@ -182,8 +182,6 @@ void populando(HASHMAP *hashMap){
     person8.idade=18;
     put(hashMap, key8, person8)? printf("-- Person %s Inserido --\n", person8.nome): printf("-- ERRO DE INSERÇÃO --\n");
     //printf("%f\n", hashMap->currentLoadFactor);
-
-    put(hashMap, key5, person5)? printf("-- %s Inserido\n", person5.nome): printf("-- ERRO DE INSERÇÃO\n");
 }
 
 int main(int argc, char *argv[]) {
